@@ -95,8 +95,9 @@ def signup_single_thirdparty() -> rx.Component:
                 width="100%",
             ),
             rx.button(
-                rx.icon(tag="github"),
-                "Sign in with Github",
+                rx.icon(tag="mail"),
+                "Sign in with Google",
+                on_click=navigation.NavState.to_home(),
                 variant="outline",
                 size="3",
                 width="100%",

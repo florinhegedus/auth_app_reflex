@@ -20,3 +20,7 @@ app.add_page(
     pages.signup_page,
     route=navigation.routes.SIGNUP_ROUTE,
 )
+app.add_page(
+    pages.reset_password_page,
+    route=navigation.routes.RESET_PASSWORD,
+)
