@@ -1,0 +1,2 @@
+HOME_ROUTE="/"
+LOGIN_ROUTE="/login"
