@@ -1,5 +1,7 @@
 import reflex as rx
 
+from .. import navigation
+
 
 def login_single_thirdparty() -> rx.Component:
     return rx.card(
@@ -24,7 +26,7 @@ def login_single_thirdparty() -> rx.Component:
                         size="3",
                         text_align="left",
                     ),
-                    rx.link("Sign up", href="#", size="3"),
+                    rx.link("Sign up", href=navigation.routes.SIGNUP_ROUTE, size="3"),
                     spacing="2",
                     opacity="0.8",
                     width="100%",
@@ -62,7 +64,7 @@ def login_single_thirdparty() -> rx.Component:
                     ),
                     rx.link(
                         "Forgot password?",
-                        href="#",
+                        href=navigation.routes.HOME_ROUTE,
                         size="3",
                     ),
                     justify="between",
@@ -128,7 +130,7 @@ def login_multiple_thirdparty() -> rx.Component:
                         size="3",
                         text_align="left",
                     ),
-                    rx.link("Sign up", href="#", size="3"),
+                    rx.link("Sign up", href=navigation.routes.HOME_ROUTE, size="3"),
                     spacing="2",
                     opacity="0.8",
                     width="100%",
@@ -166,7 +168,7 @@ def login_multiple_thirdparty() -> rx.Component:
                     ),
                     rx.link(
                         "Forgot password?",
-                        href="#",
+                        href=navigation.routes.RESET_PASSWORD,
                         size="3",
                     ),
                     justify="between",
@@ -224,8 +226,8 @@ def login_multiple_thirdparty() -> rx.Component:
 
 
 def login_page() -> rx.Component:
-    login_page = rx.center(
+    login_box = rx.center(
         login_single_thirdparty(),
         padding="1em",
     )
-    return login_page
+    return login_box

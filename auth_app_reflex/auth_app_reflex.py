@@ -16,3 +16,7 @@ app.add_page(
     pages.login_page,
     route=navigation.routes.LOGIN_ROUTE,
 )
+app.add_page(
+    pages.signup_page,
+    route=navigation.routes.SIGNUP_ROUTE,
+)
