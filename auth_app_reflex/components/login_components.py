@@ -48,6 +48,7 @@ def login_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("user")),
                     placeholder="user@reflex.dev",
+                    on_blur=AuthState.set_username,
                     type="email",
                     size="3",
                     width="100%",
@@ -74,6 +75,7 @@ def login_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter your password",
+                    on_blur=AuthState.set_password,
                     type="password",
                     size="3",
                     width="100%",

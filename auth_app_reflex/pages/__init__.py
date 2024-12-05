@@ -2,6 +2,7 @@ from .login import login_page
 from .home import home_page
 from .register import register_page
 from .reset_password import reset_password_page
+from .profile import profile_page
 
 
 __all__ = [
@@ -9,4 +10,5 @@ __all__ = [
     'home_page',
     'register_page',
     'reset_password_page',
+    'profile_page',
 ]

@@ -24,3 +24,8 @@ app.add_page(
     pages.reset_password_page,
     route=navigation.routes.RESET_PASSWORD,
 )
+app.add_page(
+    pages.profile_page,
+    route=navigation.routes.PROFILE_ROUTE,
+)
+

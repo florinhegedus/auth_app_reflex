@@ -1,6 +1,7 @@
-from .state import AuthState
+from .state import AuthState, State
 
 
 __all__ = [
     'AuthState',
+    'State',
 ]

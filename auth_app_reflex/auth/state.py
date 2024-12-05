@@ -4,6 +4,7 @@ from sqlmodel import select
 from typing import Optional
 
 from .db_model import User
+from ..navigation import NavState
 
 
 class State(rx.State):
@@ -19,7 +20,7 @@ class State(rx.State):
     def check_login(self):
         """Check if a user is logged in."""
         if not self.logged_in:
-            return rx.redirect("/login")
+            return NavState.to_login()
 
     @rx.var
     def logged_in(self) -> bool:
@@ -41,7 +42,7 @@ class AuthState(State):
             session.add(self.user)
             session.expire_on_commit = False
             session.commit()
-            return rx.redirect("/")
+            return NavState.to_login()
 
     def login(self):
         """Log in a user."""
@@ -51,6 +52,6 @@ class AuthState(State):
             ).first()
             if user and user.password == self.password:
                 self.user = user
-                return rx.redirect("/")
+                return NavState.to_profile()
             else:
                 return rx.window_alert("Invalid username or password.")
