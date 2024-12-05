@@ -1,7 +1,7 @@
 import reflex as rx
 
 from .. import navigation
-from ..auth import AuthState
+from ..auth.state import AuthState
 
 
 def register_single_thirdparty() -> rx.Component:
