@@ -17,8 +17,8 @@ app.add_page(
     route=navigation.routes.LOGIN_ROUTE,
 )
 app.add_page(
-    pages.signup_page,
-    route=navigation.routes.SIGNUP_ROUTE,
+    pages.register_page,
+    route=navigation.routes.REGISTER_ROUTE,
 )
 app.add_page(
     pages.reset_password_page,

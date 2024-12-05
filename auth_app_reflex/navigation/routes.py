@@ -1,4 +1,4 @@
 HOME_ROUTE="/"
 LOGIN_ROUTE="/login"
-SIGNUP_ROUTE="/signup"
+REGISTER_ROUTE="/register"
 RESET_PASSWORD="/reset-password"
