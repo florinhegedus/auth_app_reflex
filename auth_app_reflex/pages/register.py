@@ -53,6 +53,14 @@ def register_single_thirdparty() -> rx.Component:
                     size="3",
                     width="100%",
                 ),
+                rx.cond(
+                    AuthState.valid_email_syntax,
+                    rx.text(""),
+                    rx.text(
+                        "Please provide a valid email address.",
+                        color="red",
+                    )
+                ),
                 justify="start",
                 spacing="2",
                 width="100%",

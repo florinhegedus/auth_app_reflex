@@ -1,4 +1,5 @@
 """The authentication state."""
+import re
 import reflex as rx
 from sqlmodel import select
 from typing import Optional
@@ -34,6 +35,8 @@ class AuthState(State):
     username: str
     password: str
 
+    valid_email_syntax: bool = True
+
     def register(self):
         """Register a user."""
         with rx.session() as session:
@@ -60,6 +63,9 @@ class AuthState(State):
     def set_username(self, username):
         """ Set the username. """
         self.username = username
+
+        regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        self.valid_email_syntax = re.match(regex, username) is not None
 
     def set_password(self, password):
         """ Set the password. """
