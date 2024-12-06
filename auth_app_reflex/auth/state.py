@@ -94,7 +94,6 @@ class AuthState(State):
                 return False
         return True
 
-
     def is_password_secure(self) -> bool:
         """ Check password to be secure """
         if not self.password:
