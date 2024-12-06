@@ -35,11 +35,15 @@ class AuthState(State):
     username: str
     password: str
 
+    checked_terms: bool
+
     def register(self):
         """Register a user."""
         with rx.session() as session:
             if session.exec(select(User).where(User.username == self.username)).first():
                 return rx.window_alert("Username already exists.")
+            if not self.checked_terms:
+                return rx.window_alert("To continue, read and accept the terms and conditions.")
             self.user = User(username=self.username, password=hash_password(self.password))
             session.add(self.user)
             session.expire_on_commit = False
@@ -57,17 +61,10 @@ class AuthState(State):
                 return NavState.to_profile()
             else:
                 return rx.window_alert("Invalid username or password.")
-            
-    def set_username(self, username):
-        """ Set the username. """
-        self.username = username
-
-    def set_password(self, password):
-        """ Set the password. """
-        self.password = password
 
     @rx.var
     def check_mail_validity(self) -> bool:
+        """ Check mail syntax to be valid """
         if not self.username:
             return True
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'

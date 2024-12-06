@@ -88,7 +88,8 @@ def register_single_thirdparty() -> rx.Component:
             rx.box(
                 rx.checkbox(
                     "Agree to Terms and Conditions",
-                    default_checked=True,
+                    default_checked=False,
+                    on_change=AuthState.set_checked_terms,
                     spacing="2",
                 ),
                 width="100%",
