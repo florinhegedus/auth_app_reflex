@@ -42,8 +42,10 @@ class AuthState(State):
     def register(self):
         """Register a user."""
         with rx.session() as session:
+            if self.email_string != "" or self.password_string != "":
+                return rx.window_alert("Provide a valid mail and password.")
             if not self.checked_terms:
-                return rx.window_alert("To continue, read and accept the terms and conditions.")
+                return rx.window_alert("To continue accept the terms and conditions.")
             self.user = User(username=self.username, password=hash_password(self.password))
             session.add(self.user)
             session.expire_on_commit = False
