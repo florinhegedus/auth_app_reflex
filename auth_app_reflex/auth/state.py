@@ -63,9 +63,33 @@ class AuthState(State):
                 return rx.window_alert("Invalid username or password.")
 
     @rx.var
-    def check_mail_validity(self) -> bool:
+    def is_mail_valid(self) -> bool:
         """ Check mail syntax to be valid """
         if not self.username:
             return True
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         return re.match(regex, self.username) is not None
+    
+    @rx.var
+    def is_password_secure(self) -> bool:
+        """ Check password to be secure """
+        if not self.password:
+            return True
+        
+        min_length = 8
+        if len(self.password) < min_length:
+            return False
+
+        if not any(char.islower() for char in self.password):
+            return False
+
+        if not any(char.isupper() for char in self.password):
+            return False
+
+        if not any(char.isdigit() for char in self.password):
+            return False
+
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", self.password):
+            return False
+        
+        return True

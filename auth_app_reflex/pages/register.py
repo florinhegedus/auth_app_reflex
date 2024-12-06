@@ -54,7 +54,7 @@ def register_single_thirdparty() -> rx.Component:
                     width="100%",
                 ),
                 rx.cond(
-                    AuthState.check_mail_validity,
+                    AuthState.is_mail_valid,
                     rx.text(""),
                     rx.text(
                         "Please provide a valid email address.",
@@ -80,6 +80,14 @@ def register_single_thirdparty() -> rx.Component:
                     type="password",
                     size="3",
                     width="100%",
+                ),
+                rx.cond(
+                    AuthState.is_password_secure,
+                    rx.text(""),
+                    rx.text(
+                        "Password is not secure enough.",
+                        color="red",
+                    )
                 ),
                 justify="start",
                 spacing="2",
