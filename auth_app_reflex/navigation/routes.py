@@ -1,5 +1,5 @@
 HOME_ROUTE="/"
 LOGIN_ROUTE="/login"
 REGISTER_ROUTE="/register"
-RESET_PASSWORD="/reset-password"
+RESET_PASSWORD_ROUTE="/reset-password"
 PROFILE_ROUTE="/profile"

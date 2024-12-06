@@ -22,7 +22,7 @@ app.add_page(
 )
 app.add_page(
     pages.reset_password_page,
-    route=navigation.routes.RESET_PASSWORD,
+    route=navigation.routes.RESET_PASSWORD_ROUTE,
 )
 app.add_page(
     pages.profile_page,

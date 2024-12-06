@@ -14,3 +14,6 @@ class NavState(rx.State):
     
     def to_profile(self):
         return rx.redirect(routes.PROFILE_ROUTE)
+    
+    def to_password_reset(self):
+        return rx.redirect(routes.RESET_PASSWORD_ROUTE)

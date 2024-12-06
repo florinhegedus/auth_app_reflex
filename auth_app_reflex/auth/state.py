@@ -4,6 +4,7 @@ from sqlmodel import select
 from typing import Optional
 
 from .db_model import User
+from .encrypt import hash_password, verify_password
 from ..navigation import NavState
 
 
@@ -38,7 +39,7 @@ class AuthState(State):
         with rx.session() as session:
             if session.exec(select(User).where(User.username == self.username)).first():
                 return rx.window_alert("Username already exists.")
-            self.user = User(username=self.username, password=self.password)
+            self.user = User(username=self.username, password=hash_password(self.password))
             session.add(self.user)
             session.expire_on_commit = False
             session.commit()
@@ -50,8 +51,16 @@ class AuthState(State):
             user = session.exec(
                 select(User).where(User.username == self.username)
             ).first()
-            if user and user.password == self.password:
+            if user and verify_password(self.password, user.password):
                 self.user = user
                 return NavState.to_profile()
             else:
                 return rx.window_alert("Invalid username or password.")
+            
+    def set_username(self, username):
+        """ Set the username. """
+        self.username = username
+
+    def set_password(self, password):
+        """ Set the password. """
+        self.password = password

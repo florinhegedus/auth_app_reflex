@@ -66,7 +66,7 @@ def login_single_thirdparty() -> rx.Component:
                     ),
                     rx.link(
                         "Forgot password?",
-                        href=navigation.routes.RESET_PASSWORD,
+                        href=navigation.routes.RESET_PASSWORD_ROUTE,
                         size="3",
                     ),
                     justify="between",

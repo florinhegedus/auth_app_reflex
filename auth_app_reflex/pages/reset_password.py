@@ -1,6 +1,6 @@
 import reflex as rx
 
-from .. import navigation
+from ..auth import AuthState
 
 
 def reset_password() -> rx.Component:
@@ -36,6 +36,7 @@ def reset_password() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("user")),
                     placeholder="user@reflex.dev",
+                    on_blur=AuthState.set_username,
                     type="email",
                     size="3",
                     width="100%",
@@ -57,26 +58,7 @@ def reset_password() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter password",
-                    type="password",
-                    size="3",
-                    width="100%",
-                ),
-                spacing="2",
-                width="100%",
-            ),
-            rx.vstack(
-                rx.hstack(
-                    rx.text(
-                        "Confirm new password",
-                        size="3",
-                        weight="medium",
-                    ),
-                    justify="between",
-                    width="100%",
-                ),
-                rx.input(
-                    rx.input.slot(rx.icon("lock")),
-                    placeholder="Enter password",
+                    on_blur=AuthState.set_password,
                     type="password",
                     size="3",
                     width="100%",
@@ -85,7 +67,7 @@ def reset_password() -> rx.Component:
                 width="100%",
             ),
             rx.button("Reset password", 
-                      on_click=navigation.NavState.to_home(),
+                      on_click=AuthState.logout,
                       size="3", 
                       width="100%"),
         ),

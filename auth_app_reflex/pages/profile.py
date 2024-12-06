@@ -1,5 +1,6 @@
 import reflex as rx
-from ..auth import State
+from ..auth import State, AuthState
+from ..navigation import NavState
 
 
 def profile_page() -> rx.Component:
@@ -19,6 +20,14 @@ def profile_page() -> rx.Component:
                     ),
                     rx.text(
                         State.user.password
+                    ),
+                    rx.button(
+                        "Reset password",
+                        on_click=NavState.to_password_reset()
+                    ),
+                    rx.button(
+                        "Log out",
+                        on_click=AuthState.logout
                     ),
                     direction="column",
                     justify="start",
