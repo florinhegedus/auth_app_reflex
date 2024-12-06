@@ -35,19 +35,20 @@ class AuthState(State):
     username: str
     password: str
 
-    checked_terms: bool
+    checked_terms: bool = False
+    email_string: str
+    password_string: str
 
     def register(self):
         """Register a user."""
         with rx.session() as session:
-            if session.exec(select(User).where(User.username == self.username)).first():
-                return rx.window_alert("Username already exists.")
             if not self.checked_terms:
                 return rx.window_alert("To continue, read and accept the terms and conditions.")
             self.user = User(username=self.username, password=hash_password(self.password))
             session.add(self.user)
             session.expire_on_commit = False
             session.commit()
+            self.reset()
             return NavState.to_login()
 
     def login(self):
@@ -61,8 +62,23 @@ class AuthState(State):
                 return NavState.to_profile()
             else:
                 return rx.window_alert("Invalid username or password.")
+            
+    def set_and_check_username(self, username):
+        self.username = username
+        if not self.is_mail_valid():
+            self.email_string = "Please provide a valid email address."
+        elif not self.is_mail_available():
+            self.email_string = "Email address already in use."
+        else:
+            self.email_string = ""
+        
+    def set_and_check_password(self, password):
+        self.password = password
+        if not self.is_password_secure():
+            self.password_string = "Password is not secure enough."
+        else:
+            self.password_string = ""
 
-    @rx.var
     def is_mail_valid(self) -> bool:
         """ Check mail syntax to be valid """
         if not self.username:
@@ -70,7 +86,13 @@ class AuthState(State):
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
         return re.match(regex, self.username) is not None
     
-    @rx.var
+    def is_mail_available(self) -> bool:
+        with rx.session() as session:
+            if session.exec(select(User).where(User.username == self.username)).first():
+                return False
+        return True
+
+
     def is_password_secure(self) -> bool:
         """ Check password to be secure """
         if not self.password:

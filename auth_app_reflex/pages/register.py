@@ -48,18 +48,14 @@ def register_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("user")),
                     placeholder="user@reflex.dev",
-                    on_blur=AuthState.set_username,
+                    on_blur=AuthState.set_and_check_username,
                     type="email",
                     size="3",
                     width="100%",
                 ),
-                rx.cond(
-                    AuthState.is_mail_valid,
-                    rx.text(""),
-                    rx.text(
-                        "Please provide a valid email address.",
+                rx.text(
+                        AuthState.email_string,
                         color="red",
-                    )
                 ),
                 justify="start",
                 spacing="2",
@@ -76,18 +72,14 @@ def register_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter your password",
-                    on_blur=AuthState.set_password,
+                    on_blur=AuthState.set_and_check_password,
                     type="password",
                     size="3",
                     width="100%",
                 ),
-                rx.cond(
-                    AuthState.is_password_secure,
-                    rx.text(""),
-                    rx.text(
-                        "Password is not secure enough.",
+                rx.text(
+                        AuthState.password_string,
                         color="red",
-                    )
                 ),
                 justify="start",
                 spacing="2",
