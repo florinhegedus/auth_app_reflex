@@ -35,8 +35,6 @@ class AuthState(State):
     username: str
     password: str
 
-    valid_email_syntax: bool = True
-
     def register(self):
         """Register a user."""
         with rx.session() as session:
@@ -64,9 +62,13 @@ class AuthState(State):
         """ Set the username. """
         self.username = username
 
-        regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-        self.valid_email_syntax = re.match(regex, username) is not None
-
     def set_password(self, password):
         """ Set the password. """
         self.password = password
+
+    @rx.var
+    def check_mail_validity(self):
+        if not self.username:
+            return True
+        regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
+        return re.match(regex, self.username) is not None
