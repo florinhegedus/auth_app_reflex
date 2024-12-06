@@ -67,7 +67,7 @@ class AuthState(State):
         self.password = password
 
     @rx.var
-    def check_mail_validity(self):
+    def check_mail_validity(self) -> bool:
         if not self.username:
             return True
         regex = r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
