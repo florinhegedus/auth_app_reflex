@@ -90,19 +90,19 @@ class AuthState(State):
 
         min_length = 8
         if len(self.password) < min_length:
-            self.password_rules.append("  be at least 8 characters long.")
+            self.password_rules.append("    - be at least 8 characters long.")
 
         if not any(char.islower() for char in self.password):
-            self.password_rules.append("  contain at least one lowercase letter.")
+            self.password_rules.append("    - contain at least one lowercase letter.")
 
         if not any(char.isupper() for char in self.password):
-            self.password_rules.append("  contain at least one uppercase letter.")
+            self.password_rules.append("    - contain at least one uppercase letter.")
 
         if not any(char.isdigit() for char in self.password):
-            self.password_rules.append("  contain at least one digit.")
+            self.password_rules.append("    - contain at least one digit.")
 
         if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", self.password):
-            self.password_rules.append("  contain at least one special character.")
+            self.password_rules.append("    - contain at least one special character.")
 
     def is_mail_valid(self) -> bool:
         """ Check mail syntax to be valid """
@@ -119,7 +119,6 @@ class AuthState(State):
     
     @rx.var
     def any_password_rules(self) -> bool:
-        rx.console_log(len(self.password_rules))
         if len(self.password_rules) > 1:
             return True
         return False
