@@ -41,7 +41,7 @@ def register_single_thirdparty() -> rx.Component:
                         size="3",
                         text_align="left",
                     ),
-                    rx.link("Sign in", on_click=navigation.NavState.to_login, size="3"),
+                    rx.link("Sign in", on_click=AuthState.reset_and_go_to_login_page, size="3"),
                     spacing="2",
                     opacity="0.8",
                     width="100%",
@@ -120,7 +120,7 @@ def register_single_thirdparty() -> rx.Component:
             rx.button(
                 rx.icon(tag="mail"),
                 "Sign in with Google",
-                on_click=navigation.NavState.to_home(),
+                on_click=rx.redirect(navigation.routes.GOOGLE_SIGNIN_ROUTE),
                 variant="outline",
                 size="3",
                 width="100%",

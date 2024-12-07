@@ -1,6 +1,6 @@
 import reflex as rx
 from ..auth.state import AuthState
-from ..navigation.state import NavState
+from .. import navigation
 
 
 def home_component() -> rx.Component:
@@ -15,7 +15,7 @@ def home_component() -> rx.Component:
         rx.container(
             rx.hstack(
                 rx.text("User is not logged in."),
-                rx.button("Go to login page", on_click=NavState.to_login),
+                rx.button("Go to login page", on_click=rx.redirect(navigation.routes.LOGIN_ROUTE)),
             ),
         ),
     )

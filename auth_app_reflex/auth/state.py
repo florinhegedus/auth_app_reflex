@@ -65,6 +65,16 @@ class AuthState(State):
             else:
                 return rx.window_alert("Invalid username or password.")
             
+    def reset_and_go_to_login_page(self):
+        """ Redirect to login page and reset state. """
+        self.reset()
+        return rx.redirect(navigation.routes.LOGIN_ROUTE)
+
+    def reset_and_go_to_register_page(self):
+        """ Redirect to register page and reset state. """
+        self.reset()
+        return rx.redirect(navigation.routes.REGISTER_ROUTE)
+            
     def set_and_check_username(self, username):
         self.username = username
         if not self.is_mail_valid():

@@ -1,6 +1,6 @@
 import reflex as rx
 from ..auth import State, AuthState
-from ..navigation import NavState
+from .. import navigation
 
 
 def profile_page() -> rx.Component:
@@ -23,7 +23,7 @@ def profile_page() -> rx.Component:
                     ),
                     rx.button(
                         "Reset password",
-                        on_click=NavState.to_password_reset()
+                        on_click=rx.redirect(navigation.routes.RESET_PASSWORD_ROUTE)
                     ),
                     rx.button(
                         "Log out",
