@@ -4,6 +4,20 @@ from .. import navigation
 from ..auth.state import AuthState
 
 
+def render_item(item: rx.Var[str]):
+    """Render a single item."""
+    # Note that item here is a Var, not a str!
+    return rx.text(item, color="red", white_space="pre")
+
+
+def display_password_rules() -> rx.Component:
+    return rx.cond(AuthState.any_password_rules,
+                rx.box(
+                    rx.foreach(AuthState.password_rules, render_item),
+                ),
+                rx.text(""))
+
+
 def register_single_thirdparty() -> rx.Component:
     return rx.card(
         rx.vstack(
@@ -27,7 +41,7 @@ def register_single_thirdparty() -> rx.Component:
                         size="3",
                         text_align="left",
                     ),
-                    rx.link("Sign in", href=navigation.routes.LOGIN_ROUTE, size="3"),
+                    rx.link("Sign in", on_click=navigation.NavState.to_login, size="3"),
                     spacing="2",
                     opacity="0.8",
                     width="100%",
@@ -72,15 +86,12 @@ def register_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter your password",
-                    on_blur=AuthState.set_and_check_password,
+                    on_change=AuthState.set_and_check_password,
                     type="password",
                     size="3",
                     width="100%",
                 ),
-                rx.text(
-                        AuthState.password_string,
-                        color="red",
-                ),
+                display_password_rules(),
                 justify="start",
                 spacing="2",
                 width="100%",

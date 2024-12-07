@@ -6,7 +6,7 @@ from typing import Optional
 
 from .db_model import User
 from .encrypt import hash_password, verify_password
-from ..navigation import NavState
+from .. import navigation
 
 
 class State(rx.State):
@@ -17,12 +17,12 @@ class State(rx.State):
     def logout(self):
         """Log out a user."""
         self.reset()
-        return NavState.to_home()
+        return rx.redirect(navigation.routes.HOME_ROUTE)
 
     def check_login(self):
         """Check if a user is logged in."""
         if not self.logged_in:
-            return NavState.to_login()
+            return rx.redirect(navigation.routes.LOGIN_ROUTE)
 
     @rx.var
     def logged_in(self) -> bool:
@@ -37,12 +37,12 @@ class AuthState(State):
 
     checked_terms: bool = False
     email_string: str
-    password_string: str
+    password_rules: list[str]
 
     def register(self):
         """Register a user."""
         with rx.session() as session:
-            if self.email_string != "" or self.password_string != "":
+            if self.email_string != "" or self.any_password_rules:
                 return rx.window_alert("Provide a valid mail and password.")
             if not self.checked_terms:
                 return rx.window_alert("To continue accept the terms and conditions.")
@@ -51,7 +51,7 @@ class AuthState(State):
             session.expire_on_commit = False
             session.commit()
             self.reset()
-            return NavState.to_login()
+            return rx.redirect(navigation.routes.LOGIN_ROUTE)
 
     def login(self):
         """Log in a user."""
@@ -61,7 +61,7 @@ class AuthState(State):
             ).first()
             if user and verify_password(self.password, user.password):
                 self.user = user
-                return NavState.to_profile()
+                return rx.redirect(navigation.routes.PROFILE_ROUTE)
             else:
                 return rx.window_alert("Invalid username or password.")
             
@@ -76,10 +76,23 @@ class AuthState(State):
         
     def set_and_check_password(self, password):
         self.password = password
-        if not self.is_password_secure():
-            self.password_string = "Password is not secure enough."
-        else:
-            self.password_string = ""
+        self.password_rules = ["Password should: "]
+
+        min_length = 8
+        if len(self.password) < min_length:
+            self.password_rules.append("  be at least 8 characters long.")
+
+        if not any(char.islower() for char in self.password):
+            self.password_rules.append("  contain at least one lowercase letter.")
+
+        if not any(char.isupper() for char in self.password):
+            self.password_rules.append("  contain at least one uppercase letter.")
+
+        if not any(char.isdigit() for char in self.password):
+            self.password_rules.append("  contain at least one digit.")
+
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", self.password):
+            self.password_rules.append("  contain at least one special character.")
 
     def is_mail_valid(self) -> bool:
         """ Check mail syntax to be valid """
@@ -93,26 +106,10 @@ class AuthState(State):
             if session.exec(select(User).where(User.username == self.username)).first():
                 return False
         return True
-
-    def is_password_secure(self) -> bool:
-        """ Check password to be secure """
-        if not self.password:
+    
+    @rx.var
+    def any_password_rules(self) -> bool:
+        rx.console_log(len(self.password_rules))
+        if len(self.password_rules) > 1:
             return True
-        
-        min_length = 8
-        if len(self.password) < min_length:
-            return False
-
-        if not any(char.islower() for char in self.password):
-            return False
-
-        if not any(char.isupper() for char in self.password):
-            return False
-
-        if not any(char.isdigit() for char in self.password):
-            return False
-
-        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", self.password):
-            return False
-        
-        return True
+        return False

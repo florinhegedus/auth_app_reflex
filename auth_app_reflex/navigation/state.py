@@ -1,5 +1,6 @@
 import reflex as rx
 from . import routes
+from ..auth import AuthState
 
 
 class NavState(rx.State):
@@ -10,6 +11,7 @@ class NavState(rx.State):
         return rx.redirect(routes.LOGIN_ROUTE)
     
     def to_register(self):
+        AuthState.reset()
         return rx.redirect(routes.REGISTER_ROUTE)
     
     def to_profile(self):
