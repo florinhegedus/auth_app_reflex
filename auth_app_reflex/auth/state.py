@@ -39,7 +39,8 @@ class AuthState(State):
     email_string: str
     password_rules: list[str]
 
-    redirect_to: str = ""
+    login_redirect_to: str = ""
+    logout_redirect_to: str = ""
 
     def register(self):
         """Register a user."""
@@ -69,12 +70,14 @@ class AuthState(State):
             
     def reset_and_go_to_login_page(self):
         """ Redirect to login page and reset state. """
-        self.reset()
+        if not self.logged_in:
+            self.reset()
         return rx.redirect(navigation.routes.LOGIN_ROUTE)
 
     def reset_and_go_to_register_page(self):
         """ Redirect to register page and reset state. """
-        self.reset()
+        if not self.logged_in:
+            self.reset()
         return rx.redirect(navigation.routes.REGISTER_ROUTE)
             
     def set_and_check_username(self, username):
@@ -125,17 +128,29 @@ class AuthState(State):
             return True
         return False
     
-    def redir(self) -> rx.event.EventSpec | None:
+    def login_redir(self) -> rx.event.EventSpec | None:
         """Redirect to the redirect_to route if logged in, or to the login page if not."""
         if not self.is_hydrated:
             # wait until after hydration to ensure auth_token is known
-            return AuthState.redir()  # type: ignore
+            return AuthState.login_redir()  # type: ignore
         page = self.router.page.path
         if not self.logged_in and page != navigation.routes.LOGIN_ROUTE:
-            self.redirect_to = self.router.page.raw_path
-            return rx.redirect(navigation.routes.LOGIN_ROUTE)
+            self.login_redirect_to = self.router.page.raw_path
+            return rx.redirect(navigation.routes.LOGIN_NEEDED_ROUTE)
         elif self.logged_in and page == navigation.routes.LOGIN_ROUTE:
-            return rx.redirect(self.redirect_to or "/")
+            return rx.redirect(self.login_redirect_to or "/")
+        
+    def logout_redir(self) -> rx.event.EventSpec | None:
+        """Redirect to the redirect_to route if logged in, or to the login page if not."""
+        if not self.is_hydrated:
+            # wait until after hydration to ensure auth_token is known
+            return AuthState.logout_redir()  # type: ignore
+        page = self.router.page.path
+        if self.logged_in and page != navigation.routes.HOME_ROUTE:
+            self.logout_redirect_to = self.router.page.raw_path
+            return rx.redirect(navigation.routes.LOGOUT_NEEDED_ROUTE)
+        elif not self.logged_in and page == navigation.routes.HOME_ROUTE:
+            return rx.redirect(self.logout_redirect_to or "/")
     
 
 def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
@@ -146,7 +161,7 @@ def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
                 AuthState.logged_in,
                 page(),
                 rx.center(
-                    rx.text("Loading...", on_mount=AuthState.redir),
+                    rx.text("Loading...", on_mount=AuthState.login_redir),
                 ),
             )
         )
@@ -163,7 +178,7 @@ def require_logout(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
                 ~AuthState.logged_in,
                 page(),
                 rx.center(
-                    rx.text("Loading...", on_mount=AuthState.redir),
+                    rx.text("Loading...", on_mount=AuthState.logout_redir),
                 ),
             )
         )

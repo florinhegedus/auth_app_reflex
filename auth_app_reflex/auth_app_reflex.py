@@ -28,4 +28,12 @@ app.add_page(
     pages.profile_page,
     route=navigation.routes.PROFILE_ROUTE,
 )
+app.add_page(
+    pages.login_needed_page,
+    route=navigation.routes.LOGIN_NEEDED_ROUTE,
+)
+app.add_page(
+    pages.logout_needed_page,
+    route=navigation.routes.LOGOUT_NEEDED_ROUTE,
+)
 

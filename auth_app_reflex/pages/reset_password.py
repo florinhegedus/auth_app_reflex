@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..auth import AuthState
+from ..auth import AuthState, require_login
 
 
 def reset_password() -> rx.Component:
@@ -77,6 +77,7 @@ def reset_password() -> rx.Component:
     )
 
 
+@require_login
 def reset_password_page() -> rx.Component:
     reset_password_box = rx.center(
         reset_password(),
