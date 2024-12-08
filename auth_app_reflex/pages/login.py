@@ -1,7 +1,7 @@
 import reflex as rx
 
 from .. import navigation
-from ..auth import AuthState
+from ..auth import AuthState, require_logout
 
 
 def login_single_thirdparty() -> rx.Component:
@@ -115,6 +115,7 @@ def login_single_thirdparty() -> rx.Component:
     )
 
 
+@require_logout
 def login_page() -> rx.Component:
     login_box = rx.center(
         login_single_thirdparty(),

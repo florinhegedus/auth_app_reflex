@@ -39,6 +39,8 @@ class AuthState(State):
     email_string: str
     password_rules: list[str]
 
+    redirect_to: str = ""
+
     def register(self):
         """Register a user."""
         with rx.session() as session:
@@ -122,3 +124,49 @@ class AuthState(State):
         if len(self.password_rules) > 1:
             return True
         return False
+    
+    def redir(self) -> rx.event.EventSpec | None:
+        """Redirect to the redirect_to route if logged in, or to the login page if not."""
+        if not self.is_hydrated:
+            # wait until after hydration to ensure auth_token is known
+            return AuthState.redir()  # type: ignore
+        page = self.router.page.path
+        if not self.logged_in and page != navigation.routes.LOGIN_ROUTE:
+            self.redirect_to = self.router.page.raw_path
+            return rx.redirect(navigation.routes.LOGIN_ROUTE)
+        elif self.logged_in and page == navigation.routes.LOGIN_ROUTE:
+            return rx.redirect(self.redirect_to or "/")
+    
+
+def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
+    """ Decorator to denote that a page requires the user to be logged in. """
+    def protected_page():
+        return rx.fragment(
+            rx.cond(
+                AuthState.logged_in,
+                page(),
+                rx.center(
+                    rx.text("Loading...", on_mount=AuthState.redir),
+                ),
+            )
+        )
+
+    protected_page.__name__ = page.__name__
+    return protected_page
+
+
+def require_logout(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
+    """ Decorator to denote that a page requires the user to be logged out. """
+    def protected_page():
+        return rx.fragment(
+            rx.cond(
+                ~AuthState.logged_in,
+                page(),
+                rx.center(
+                    rx.text("Loading...", on_mount=AuthState.redir),
+                ),
+            )
+        )
+
+    protected_page.__name__ = page.__name__
+    return protected_page

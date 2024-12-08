@@ -1,8 +1,9 @@
 import reflex as rx
-from ..auth import State, AuthState
+from ..auth import State, AuthState, require_login
 from .. import navigation
 
 
+@require_login
 def profile_page() -> rx.Component:
     profile_box = rx.center(
         rx.card(
