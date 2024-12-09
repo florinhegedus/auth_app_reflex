@@ -65,7 +65,7 @@ def reset_password() -> rx.Component:
                 ),
                 rx.cond(AuthState.passwords_match,
                         rx.text(""),
-                        rx.text("Passwords do not match")
+                        rx.text("Passwords do not match", color="red")
                 ),
                 justify="start",
                 spacing="2",
