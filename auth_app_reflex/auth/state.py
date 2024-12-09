@@ -14,10 +14,13 @@ class State(rx.State):
 
     user: Optional[User] = None
 
-    def logout(self):
-        """Log out a user."""
+    def reset_state(self):
         self.reset()
         self.user = None
+
+    def logout(self):
+        """Log out a user."""
+        self.reset_state()
         return rx.redirect(navigation.routes.HOME_ROUTE)
 
     def check_login(self):
@@ -54,8 +57,7 @@ class AuthState(State):
             session.add(self.user)
             session.expire_on_commit = False
             session.commit()
-            self.reset()
-            self.user = None
+            self.reset_state()
             return rx.redirect(navigation.routes.LOGIN_ROUTE)
 
     def login(self):
@@ -73,15 +75,13 @@ class AuthState(State):
     def reset_and_go_to_login_page(self):
         """ Redirect to login page and reset state. """
         if not self.logged_in:
-            self.reset()
-            self.user = None
+            self.reset_state()
         return rx.redirect(navigation.routes.LOGIN_ROUTE)
 
     def reset_and_go_to_register_page(self):
         """ Redirect to register page and reset state. """
         if not self.logged_in:
-            self.reset()
-            self.user = None
+            self.reset_state()
         return rx.redirect(navigation.routes.REGISTER_ROUTE)
             
     def set_and_check_username(self, username):
