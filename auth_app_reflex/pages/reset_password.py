@@ -1,6 +1,7 @@
 import reflex as rx
 
 from ..auth import AuthState, require_login
+from .components import display_password_rules
 
 
 def reset_password() -> rx.Component:
@@ -27,47 +28,51 @@ def reset_password() -> rx.Component:
             ),
             rx.vstack(
                 rx.text(
-                    "Email address",
+                    "New password",
                     size="3",
                     weight="medium",
                     text_align="left",
                     width="100%",
                 ),
                 rx.input(
-                    rx.input.slot(rx.icon("user")),
-                    placeholder="user@reflex.dev",
-                    on_blur=AuthState.set_username,
-                    type="email",
+                    rx.input.slot(rx.icon("lock")),
+                    placeholder="Enter password",
+                    on_change=AuthState.set_and_check_password,
+                    type="password",
                     size="3",
                     width="100%",
                 ),
+                display_password_rules(),
                 justify="start",
                 spacing="2",
                 width="100%",
             ),
             rx.vstack(
-                rx.hstack(
-                    rx.text(
-                        "Enter new password",
-                        size="3",
-                        weight="medium",
-                    ),
-                    justify="between",
+                rx.text(
+                    "Confirm new password",
+                    size="3",
+                    weight="medium",
+                    text_align="left",
                     width="100%",
                 ),
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter password",
-                    on_blur=AuthState.set_password,
+                    on_change=AuthState.set_password_confirm,
                     type="password",
                     size="3",
                     width="100%",
                 ),
+                rx.cond(AuthState.passwords_match,
+                        rx.text(""),
+                        rx.text("Passwords do not match")
+                ),
+                justify="start",
                 spacing="2",
                 width="100%",
             ),
             rx.button("Reset password", 
-                      on_click=AuthState.logout,
+                      on_click=AuthState.reset_password,
                       size="3", 
                       width="100%"),
         ),

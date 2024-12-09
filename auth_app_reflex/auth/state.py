@@ -42,6 +42,7 @@ class AuthState(State):
     checked_terms: bool = False
     email_string: str
     password_rules: list[str]
+    password_confirm: str
 
     login_redirect_to: str = ""
     logout_redirect_to: str = ""
@@ -71,6 +72,20 @@ class AuthState(State):
                 return rx.redirect(navigation.routes.PROFILE_ROUTE)
             else:
                 return rx.window_alert("Invalid username or password.")
+            
+    def reset_password(self):
+        """ Reset password """
+        with rx.session() as session:
+            user = session.exec(
+                select(User).where(User.username == self.username)
+            ).first()
+            if self.passwords_match and not self.any_password_rules:
+                user.password = hash_password(self.password)
+                session.add(user)
+                session.commit()
+                return rx.redirect(navigation.routes.PROFILE_ROUTE)
+            else:
+                return rx.window_alert("Make sure the rules are checked and passwords match.")
             
     def reset_and_go_to_login_page(self):
         """ Redirect to login page and reset state. """
@@ -112,7 +127,7 @@ class AuthState(State):
 
         if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", self.password):
             self.password_rules.append("    - contain at least one special character.")
-
+    
     def is_mail_valid(self) -> bool:
         """ Check mail syntax to be valid """
         if not self.username:
@@ -125,6 +140,12 @@ class AuthState(State):
             if session.exec(select(User).where(User.username == self.username)).first():
                 return False
         return True
+    
+    @rx.var
+    def passwords_match(self) -> bool:
+        if self.password_confirm == self.password:
+            return True
+        return False
     
     @rx.var
     def any_password_rules(self) -> bool:
