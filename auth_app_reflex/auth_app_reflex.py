@@ -4,7 +4,7 @@ import reflex as rx
 
 from rxconfig import config
 
-from . import pages, navigation
+from . import pages, navigation, google_auth
 
 
 app = rx.App()
@@ -35,5 +35,10 @@ app.add_page(
 app.add_page(
     pages.logout_needed_page,
     route=navigation.routes.LOGOUT_NEEDED_ROUTE,
+)
+
+app.add_page(
+    google_auth.index_google_login,
+    route=navigation.routes.GOOGLE_LOGIN_ROUTE
 )
 
