@@ -114,4 +114,3 @@ def protected() -> rx.Component:
         rx.text(State.protected_content),
         rx.link("Home page for google", href="/google-login"),
     )
-

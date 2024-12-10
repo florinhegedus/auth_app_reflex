@@ -101,7 +101,7 @@ def login_single_thirdparty() -> rx.Component:
             rx.button(
                 rx.icon(tag="mail"),
                 "Sign in with Google",
-                on_click=rx.redirect(navigation.routes.GOOGLE_SIGNIN_ROUTE),
+                on_click=rx.redirect(navigation.routes.GOOGLE_LOGIN_ROUTE),
                 variant="outline",
                 size="3",
                 width="100%",
