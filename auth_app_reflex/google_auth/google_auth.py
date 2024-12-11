@@ -1,6 +1,5 @@
 import functools
 import json
-import os
 import time
 
 from google.auth.transport import requests
