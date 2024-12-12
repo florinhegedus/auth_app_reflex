@@ -74,9 +74,12 @@ def user_info(tokeninfo: dict) -> rx.Component:
 
 
 def login() -> rx.Component:
-    return rx.vstack(
-        GoogleLogin.create(on_success=State.on_success),
-    )
+    return rx.center(
+        rx.vstack(
+            GoogleLogin.create(on_success=State.on_success),
+            padding="10px",
+        )
+        )
 
 
 def require_google_login(page) -> rx.Component:
