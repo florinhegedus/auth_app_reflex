@@ -48,7 +48,7 @@ class AuthState(State):
     logout_redirect_to: str = ""
 
     def register(self):
-        """Register a user."""
+        """ Register a user."""
         with rx.session() as session:
             if self.email_string != "" or self.any_password_rules:
                 return rx.window_alert("Provide a valid mail and password.")
@@ -62,7 +62,7 @@ class AuthState(State):
             return rx.redirect(navigation.routes.LOGIN_ROUTE)
 
     def login(self):
-        """Log in a user."""
+        """ Log in a user."""
         with rx.session() as session:
             user = session.exec(
                 select(User).where(User.username == self.username)
@@ -154,7 +154,7 @@ class AuthState(State):
         return False
     
     def login_redir(self) -> rx.event.EventSpec | None:
-        """Redirect to the redirect_to route if logged in, or to the login page if not."""
+        """ Redirect to the redirect_to route if logged in, or to the login page if not."""
         if not self.is_hydrated:
             # wait until after hydration to ensure auth_token is known
             return AuthState.login_redir()  # type: ignore
@@ -166,7 +166,7 @@ class AuthState(State):
             return rx.redirect(self.login_redirect_to or "/")
         
     def logout_redir(self) -> rx.event.EventSpec | None:
-        """Redirect to the redirect_to route if logged in, or to the login page if not."""
+        """ Redirect to the redirect_to route if logged in, or to the login page if not."""
         if not self.is_hydrated:
             # wait until after hydration to ensure auth_token is known
             return AuthState.logout_redir()  # type: ignore
@@ -176,7 +176,7 @@ class AuthState(State):
             return rx.redirect(navigation.routes.LOGOUT_NEEDED_ROUTE)
         elif not self.logged_in and page == navigation.routes.HOME_ROUTE:
             return rx.redirect(self.logout_redirect_to or "/")
-    
+            
 
 def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
     """ Decorator to denote that a page requires the user to be logged in. """
