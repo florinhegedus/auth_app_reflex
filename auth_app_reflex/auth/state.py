@@ -25,6 +25,23 @@ class State(rx.State):
     login_redirect_to: str = ""
     logout_redirect_to: str = ""
 
+    @rx.var
+    def logged_in(self) -> bool:
+        """Check if a user is logged in."""
+        return self.user is not None
+    
+    @rx.var
+    def passwords_match(self) -> bool:
+        if self.password_confirm == self.password:
+            return True
+        return False
+    
+    @rx.var
+    def any_password_rules(self) -> bool:
+        if len(self.password_rules) > 1:
+            return True
+        return False
+    
     def reset_state(self):
         self.reset()
         self.user = None
@@ -38,11 +55,6 @@ class State(rx.State):
         """Check if a user is logged in."""
         if not self.logged_in:
             return rx.redirect(navigation.routes.LOGIN_ROUTE)
-
-    @rx.var
-    def logged_in(self) -> bool:
-        """Check if a user is logged in."""
-        return self.user is not None
 
     def register(self):
         """ Register a user."""
@@ -137,18 +149,6 @@ class State(rx.State):
             if session.exec(select(User).where(User.username == self.username)).first():
                 return False
         return True
-    
-    @rx.var
-    def passwords_match(self) -> bool:
-        if self.password_confirm == self.password:
-            return True
-        return False
-    
-    @rx.var
-    def any_password_rules(self) -> bool:
-        if len(self.password_rules) > 1:
-            return True
-        return False
     
     def login_redir(self) -> rx.event.EventSpec | None:
         """ Redirect to the redirect_to route if logged in, or to the login page if not."""
