@@ -1,15 +1,15 @@
 import reflex as rx
-from ..auth.state import AuthState
+from ..auth.state import State
 from .. import navigation
 
 
 def home_component() -> rx.Component:
     home_box = rx.cond(
-        AuthState.logged_in,
+        State.logged_in,
         rx.container(
             rx.hstack(
-                rx.text("Logged in user: " + AuthState.username),
-                rx.button("Log out", on_click=AuthState.logout),
+                rx.text("Logged in user: " + State.username),
+                rx.button("Log out", on_click=State.logout),
             ),
         ),
         rx.container(

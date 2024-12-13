@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ..auth import AuthState, require_login
+from ..auth import State, require_login
 from .components import display_password_rules
 
 
@@ -37,7 +37,7 @@ def reset_password() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter password",
-                    on_change=AuthState.set_and_check_password,
+                    on_change=State.set_and_check_password,
                     type="password",
                     size="3",
                     width="100%",
@@ -58,12 +58,12 @@ def reset_password() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter password",
-                    on_change=AuthState.set_password_confirm,
+                    on_change=State.set_password_confirm,
                     type="password",
                     size="3",
                     width="100%",
                 ),
-                rx.cond(AuthState.passwords_match,
+                rx.cond(State.passwords_match,
                         rx.text(""),
                         rx.text("Passwords do not match", color="red")
                 ),
@@ -72,7 +72,7 @@ def reset_password() -> rx.Component:
                 width="100%",
             ),
             rx.button("Reset password", 
-                      on_click=AuthState.reset_password,
+                      on_click=State.reset_password,
                       size="3", 
                       width="100%"),
         ),

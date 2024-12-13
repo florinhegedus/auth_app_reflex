@@ -14,6 +14,17 @@ class State(rx.State):
 
     user: Optional[User] = None
 
+    username: str
+    password: str
+
+    checked_terms: bool = False
+    email_string: str
+    password_rules: list[str]
+    password_confirm: str
+
+    login_redirect_to: str = ""
+    logout_redirect_to: str = ""
+
     def reset_state(self):
         self.reset()
         self.user = None
@@ -32,20 +43,6 @@ class State(rx.State):
     def logged_in(self) -> bool:
         """Check if a user is logged in."""
         return self.user is not None
-
-
-class AuthState(State):
-    """The authentication state for register and login page."""
-    username: str
-    password: str
-
-    checked_terms: bool = False
-    email_string: str
-    password_rules: list[str]
-    password_confirm: str
-
-    login_redirect_to: str = ""
-    logout_redirect_to: str = ""
 
     def register(self):
         """ Register a user."""
@@ -157,7 +154,7 @@ class AuthState(State):
         """ Redirect to the redirect_to route if logged in, or to the login page if not."""
         if not self.is_hydrated:
             # wait until after hydration to ensure auth_token is known
-            return AuthState.login_redir()  # type: ignore
+            return State.login_redir()  # type: ignore
         page = self.router.page.path
         if not self.logged_in and page != navigation.routes.LOGIN_ROUTE:
             self.login_redirect_to = self.router.page.raw_path
@@ -169,7 +166,7 @@ class AuthState(State):
         """ Redirect to the redirect_to route if logged in, or to the login page if not."""
         if not self.is_hydrated:
             # wait until after hydration to ensure auth_token is known
-            return AuthState.logout_redir()  # type: ignore
+            return State.logout_redir()  # type: ignore
         page = self.router.page.path
         if self.logged_in and page != navigation.routes.HOME_ROUTE:
             self.logout_redirect_to = self.router.page.raw_path
@@ -183,10 +180,10 @@ def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
     def protected_page():
         return rx.fragment(
             rx.cond(
-                AuthState.logged_in,
+                State.logged_in,
                 page(),
                 rx.center(
-                    rx.text("Loading...", on_mount=AuthState.login_redir),
+                    rx.text("Loading...", on_mount=State.login_redir),
                 ),
             )
         )
@@ -200,10 +197,10 @@ def require_logout(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
     def protected_page():
         return rx.fragment(
             rx.cond(
-                ~AuthState.logged_in,
+                ~State.logged_in,
                 page(),
                 rx.center(
-                    rx.text("Loading...", on_mount=AuthState.logout_redir),
+                    rx.text("Loading...", on_mount=State.logout_redir),
                 ),
             )
         )

@@ -1,7 +1,7 @@
 import reflex as rx
 
 from .. import navigation
-from ..auth import AuthState, require_logout
+from ..auth import State, require_logout
 
 
 def login_single_thirdparty() -> rx.Component:
@@ -27,7 +27,7 @@ def login_single_thirdparty() -> rx.Component:
                         size="3",
                         text_align="left",
                     ),
-                    rx.link("Sign up", on_click=AuthState.reset_and_go_to_register_page, size="3"),
+                    rx.link("Sign up", on_click=State.reset_and_go_to_register_page, size="3"),
                     spacing="2",
                     opacity="0.8",
                     width="100%",
@@ -48,7 +48,7 @@ def login_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("user")),
                     placeholder="user@reflex.dev",
-                    on_blur=AuthState.set_username,
+                    on_blur=State.set_username,
                     type="email",
                     size="3",
                     width="100%",
@@ -75,7 +75,7 @@ def login_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter your password",
-                    on_blur=AuthState.set_password,
+                    on_blur=State.set_password,
                     type="password",
                     size="3",
                     width="100%",
@@ -84,7 +84,7 @@ def login_single_thirdparty() -> rx.Component:
                 width="100%",
             ),
             rx.button("Sign in", 
-                      on_click=AuthState.login(),
+                      on_click=State.login(),
                       size="3", 
                       width="100%"),
             rx.hstack(

@@ -1,6 +1,6 @@
 import reflex as rx
 
-from ...auth.state import AuthState
+from ...auth.state import State
 
 
 def render_item(item: rx.Var[str]):
@@ -10,8 +10,8 @@ def render_item(item: rx.Var[str]):
 
 
 def display_password_rules() -> rx.Component:
-    return rx.cond(AuthState.any_password_rules,
+    return rx.cond(State.any_password_rules,
                 rx.box(
-                    rx.foreach(AuthState.password_rules, render_item),
+                    rx.foreach(State.password_rules, render_item),
                 ),
                 rx.text(""))

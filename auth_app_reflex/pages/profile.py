@@ -1,5 +1,5 @@
 import reflex as rx
-from ..auth import State, AuthState, require_login
+from ..auth import State, State, require_login
 from .. import navigation
 
 
@@ -28,7 +28,7 @@ def profile_page() -> rx.Component:
                     ),
                     rx.button(
                         "Log out",
-                        on_click=AuthState.logout
+                        on_click=State.logout
                     ),
                     direction="column",
                     justify="start",

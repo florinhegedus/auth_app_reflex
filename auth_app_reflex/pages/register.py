@@ -1,7 +1,7 @@
 import reflex as rx
 
 from .. import navigation
-from ..auth.state import AuthState, require_logout
+from ..auth.state import State, require_logout
 from .components import display_password_rules
 
 
@@ -28,7 +28,7 @@ def register_single_thirdparty() -> rx.Component:
                         size="3",
                         text_align="left",
                     ),
-                    rx.link("Sign in", on_click=AuthState.reset_and_go_to_login_page, size="3"),
+                    rx.link("Sign in", on_click=State.reset_and_go_to_login_page, size="3"),
                     spacing="2",
                     opacity="0.8",
                     width="100%",
@@ -49,13 +49,13 @@ def register_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("user")),
                     placeholder="user@reflex.dev",
-                    on_blur=AuthState.set_and_check_username,
+                    on_blur=State.set_and_check_username,
                     type="email",
                     size="3",
                     width="100%",
                 ),
                 rx.text(
-                        AuthState.email_string,
+                        State.email_string,
                         color="red",
                 ),
                 justify="start",
@@ -73,7 +73,7 @@ def register_single_thirdparty() -> rx.Component:
                 rx.input(
                     rx.input.slot(rx.icon("lock")),
                     placeholder="Enter your password",
-                    on_change=AuthState.set_and_check_password,
+                    on_change=State.set_and_check_password,
                     type="password",
                     size="3",
                     width="100%",
@@ -87,12 +87,12 @@ def register_single_thirdparty() -> rx.Component:
                 rx.checkbox(
                     "Agree to Terms and Conditions",
                     default_checked=False,
-                    on_change=AuthState.set_checked_terms,
+                    on_change=State.set_checked_terms,
                     spacing="2",
                 ),
                 width="100%",
             ),
-            rx.button("Register", size="3", width="100%", on_click=AuthState.register),
+            rx.button("Register", size="3", width="100%", on_click=State.register),
             rx.hstack(
                 rx.divider(margin="0"),
                 rx.text(
